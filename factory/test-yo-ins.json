@@ -1,0 +1,9 @@
+{
+	"name": "test-yo-ins",
+	"location": "japaneast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1953c770-2971-4ec9-8c2d-66bda48bb220",
+		"tenantId": "61ed5503-9bd3-49d0-8657-d379a7100eb7"
+	}
+}

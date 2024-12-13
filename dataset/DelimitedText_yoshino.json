@@ -1,0 +1,25 @@
+{
+	"name": "DelimitedText_yoshino",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage_yoshino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "yoshino/kanripoint_out_test",
+				"fileSystem": "work"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"nullValue": "N",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

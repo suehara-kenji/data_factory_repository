@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_ssj_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_ssj_20240514"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MainControlTable_ssj"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

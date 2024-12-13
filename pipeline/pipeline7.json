@@ -1,0 +1,36 @@
+{
+	"name": "pipeline7",
+	"properties": {
+		"activities": [
+			{
+				"name": "Notebook2",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yu.shimamura@avantcorp.com/PL起動テスト",
+					"baseParameters": {
+						"TableName": "hive_metastore.sample_test.test_truncate_student"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "shimamura_pipeline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-08-14T06:48:40Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

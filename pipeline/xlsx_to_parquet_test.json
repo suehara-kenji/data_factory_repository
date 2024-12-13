@@ -1,0 +1,229 @@
+{
+	"name": "xlsx_to_parquet_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "領域",
+									"type": "String"
+								},
+								"sink": {
+									"name": "領域"
+								}
+							},
+							{
+								"source": {
+									"name": "管理ポイント名称",
+									"type": "String"
+								},
+								"sink": {
+									"name": "管理ポイント名称"
+								}
+							},
+							{
+								"source": {
+									"name": "型",
+									"type": "String"
+								},
+								"sink": {
+									"name": "型"
+								}
+							},
+							{
+								"source": {
+									"name": "区分名称",
+									"type": "String"
+								},
+								"sink": {
+									"name": "区分名称"
+								}
+							},
+							{
+								"source": {
+									"name": "区分_from"
+								},
+								"sink": {
+									"name": "区分_from",
+									"type": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "区分_to"
+								},
+								"sink": {
+									"name": "区分_to",
+									"type": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "運用開始日",
+									"type": "String"
+								},
+								"sink": {
+									"name": "運用開始日"
+								}
+							},
+							{
+								"source": {
+									"name": "運用終了日",
+									"type": "String"
+								},
+								"sink": {
+									"name": "運用終了日"
+								}
+							},
+							{
+								"source": {
+									"name": "論理削除フラグ",
+									"type": "String"
+								},
+								"sink": {
+									"name": "論理削除フラグ"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "XlsxSorce_test",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": {
+								"value": "@pipeline().parameters.src_filename",
+								"type": "Expression"
+							},
+							"dir": {
+								"value": "@pipeline().parameters.src_dir",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet1",
+						"type": "DatasetReference",
+						"parameters": {
+							"dir": {
+								"value": "@pipeline().parameters.tgt_dir",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.tgt_filename",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy data2",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"src_filename": {
+				"type": "string",
+				"defaultValue": "filename"
+			},
+			"src_dir": {
+				"type": "string",
+				"defaultValue": "src_dir"
+			},
+			"tgt_dir": {
+				"type": "string",
+				"defaultValue": "tgt_dir"
+			},
+			"tgt_filename": {
+				"type": "string",
+				"defaultValue": "*.parquet"
+			}
+		},
+		"folder": {
+			"name": "Oishi_PipeLine"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-12-14T05:20:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

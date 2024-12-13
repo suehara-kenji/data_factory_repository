@@ -1,0 +1,240 @@
+{
+	"name": "kanri_point_test4",
+	"properties": {
+		"description": "管理ポイントのテスト\nAzureストレージにあるエクセルファイルを開き、マージしてから別のディレクトリに保存する",
+		"activities": [
+			{
+				"name": "GetFileList",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "kanripointInputBinaryFolder",
+						"type": "DatasetReference",
+						"parameters": {
+							"dir": {
+								"value": "@pipeline().parameters.SrcDir",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "FilterFiles",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "GetFileList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetFileList').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().type,'File')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEachFile",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "FilterFileName",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set tgt_ts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FilterFileName').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 5,
+					"activities": [
+						{
+							"name": "MoveFile",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0
+							},
+							"inputs": [
+								{
+									"referenceName": "kanripointInputBinaryFile",
+									"type": "DatasetReference",
+									"parameters": {
+										"filename": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"dir": {
+											"value": "@pipeline().parameters.TgtDir",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "kanripointOutputBinary",
+									"type": "DatasetReference",
+									"parameters": {
+										"dir": {
+											"value": "@Concat(\n    pipeline().parameters.TgtDir\n    ,'/'\n    ,pipeline().parameters.IngestDateColumnName\n    ,'='\n    ,formatDateTime(\n        variables('tgt_ts')\n        , 'yyyy-MM-dd'\n    )\n    ,'/',pipeline().parameters.IngestTimestampColumnName,\n    '='\n    ,formatDateTime(\n        variables('tgt_ts')\n        ,'yyyy-MM-dd HH'\n    ),\n    '%3A'\n    ,formatDateTime(\n        variables('tgt_ts')\n        ,'mm'\n    ),\n    '%3A'\n    ,formatDateTime(\n        variables('tgt_ts')\n        ,'ss'\n    )\n)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "FilterFileName",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "FilterFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FilterFiles').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@and(\n     or(\n        startswith(item().name,pipeline().parameters.StartName),\n        equals(pipeline().parameters.StartName,'*')\n     ),\n     or(\n        endswith(item().name,pipeline().parameters.EndName),\n        equals(pipeline().parameters.EndName,'*')\n     ))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set tgt_ts",
+				"description": "Setting TimeStamp",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "tgt_ts",
+					"value": {
+						"value": "@if(\n    empty(pipeline().parameters.TargetTimestamp)\n    ,formatDateTime(\n        utcNow()\n        , 'yyyy-MM-dd HH:mm:ss'\n    )\n    ,pipeline().parameters.TargetTimestamp\n)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"StartName": {
+				"type": "string",
+				"defaultValue": "*"
+			},
+			"EndName": {
+				"type": "string",
+				"defaultValue": ".xlsx"
+			},
+			"SrcConatiner": {
+				"type": "string",
+				"defaultValue": "adfv2tutorial"
+			},
+			"TgtDir": {
+				"type": "string",
+				"defaultValue": "kanri_point_test_output"
+			},
+			"IngestDateColumnName": {
+				"type": "string",
+				"defaultValue": "audit__ingest_date"
+			},
+			"IngestTimestampColumnName": {
+				"type": "string",
+				"defaultValue": "audit__ingest_timestamp"
+			},
+			"TargetTimestamp": {
+				"type": "string"
+			},
+			"SrcDir": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"tgt_ts": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Oishi_PipeLine"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-11-01T10:27:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

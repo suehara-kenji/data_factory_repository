@@ -1,0 +1,30 @@
+{
+	"name": "trigger1_test",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "MetadataDrivenCopyTask_ssj_TopLevel",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"MaxNumberOfObjectsReturnedFromLookupActivity": 5000,
+					"MaxNumberOfConcurrentTasks": 20,
+					"MainControlTableName": "MainControlTable_ssj"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2024-05-13T14:53:00",
+				"endTime": "2024-05-15T05:45:00",
+				"timeZone": "Tokyo Standard Time"
+			}
+		}
+	}
+}

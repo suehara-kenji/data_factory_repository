@@ -1,0 +1,63 @@
+{
+	"name": "Excel_test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Oishi_Dataset"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "管理ポイント_購買DWH_在庫区分sample1.xlsx",
+				"folderPath": "管理ポイントsample_input",
+				"fileSystem": "adfv2tutorial"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "領域",
+				"type": "String"
+			},
+			{
+				"name": "管理ポイント名称",
+				"type": "String"
+			},
+			{
+				"name": "型",
+				"type": "String"
+			},
+			{
+				"name": "区分名称",
+				"type": "String"
+			},
+			{
+				"name": "区分(from)",
+				"type": "String"
+			},
+			{
+				"name": "区分(to)",
+				"type": "String"
+			},
+			{
+				"name": "運用開始日",
+				"type": "String"
+			},
+			{
+				"name": "運用終了日",
+				"type": "String"
+			},
+			{
+				"name": "論理削除フラグ",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

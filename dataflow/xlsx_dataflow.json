@@ -1,0 +1,65 @@
+{
+	"name": "xlsx_dataflow",
+	"properties": {
+		"folder": {
+			"name": "Oishi_DataFlow"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sampleInput",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "kanripointOutput",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {領域} as string,",
+				"          {管理ポイント名称} as string,",
+				"          {型} as string,",
+				"          {区分名称} as string,",
+				"          {区分(from)} as string,",
+				"          {区分(to)} as string,",
+				"          {運用開始日} as string,",
+				"          {運用終了日} as string,",
+				"          {論理削除フラグ} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          {領域} as string,",
+				"          {管理ポイント名称} as string,",
+				"          {型} as string,",
+				"          {区分名称} as string,",
+				"          {区分(from)} as string,",
+				"          {区分(to)} as string,",
+				"          {運用開始日} as string,",
+				"          {運用終了日} as string,",
+				"          {論理削除フラグ} as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

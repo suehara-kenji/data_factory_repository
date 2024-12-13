@@ -1,0 +1,22 @@
+{
+	"name": "Excel_yoshino",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage_yoshino",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "yoshino/kanripoint_in_excel_yoshino",
+				"fileSystem": "work"
+			},
+			"sheetIndex": 1,
+			"range": "A1:E100"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

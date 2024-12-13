@@ -1,0 +1,75 @@
+{
+	"name": "call_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Call_DataCopy",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DataCopy",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Call_Bronze_call",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Call_DataCopy",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Bronze_call",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Call_Silver_call",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Call_Bronze_call",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Silver_call",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "pilot_zeal"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-10-19T06:37:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

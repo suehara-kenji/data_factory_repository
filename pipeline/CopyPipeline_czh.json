@@ -1,0 +1,89 @@
+{
+	"name": "CopyPipeline_czh",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_czh",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.test"
+					},
+					{
+						"name": "Destination",
+						"value": "hoge.test20"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureDatabricksDeltaLakeSink",
+						"importSettings": {
+							"type": "AzureDatabricksDeltaLakeImportCommand"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureDataLakeStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "kthoriguchidatabricks/stg"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "A",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "A",
+									"type": "Int"
+								}
+							},
+							{
+								"source": {
+									"name": "B",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "B",
+									"type": "Int"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_czh",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_czh",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-09-25T09:32:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

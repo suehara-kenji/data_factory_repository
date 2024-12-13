@@ -1,0 +1,21 @@
+{
+	"name": "azc000dlsdpdev1_ingest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "pilot_zeal"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "ingest"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

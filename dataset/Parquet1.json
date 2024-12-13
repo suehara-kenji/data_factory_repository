@@ -1,0 +1,76 @@
+{
+	"name": "Parquet1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dir": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Oishi_Dataset"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().dir",
+					"type": "Expression"
+				},
+				"fileSystem": "adfv2tutorial"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "領域",
+				"type": "UTF8"
+			},
+			{
+				"name": "管理ポイント名称",
+				"type": "UTF8"
+			},
+			{
+				"name": "型",
+				"type": "UTF8"
+			},
+			{
+				"name": "区分名称",
+				"type": "UTF8"
+			},
+			{
+				"name": "区分_from",
+				"type": "UTF8"
+			},
+			{
+				"name": "区分_to",
+				"type": "UTF8"
+			},
+			{
+				"name": "運用開始日",
+				"type": "UTF8"
+			},
+			{
+				"name": "運用終了日",
+				"type": "UTF8"
+			},
+			{
+				"name": "論理削除フラグ",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

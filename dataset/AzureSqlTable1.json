@@ -1,0 +1,27 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sqldb_cosmo_kthoriguchi",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "date_yyyymmdd",
+				"type": "nvarchar"
+			},
+			{
+				"name": "pipelineA",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "hori",
+			"table": "TriggerSchedule"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

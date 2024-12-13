@@ -1,0 +1,69 @@
+{
+	"name": "xlsxToSql",
+	"properties": {
+		"folder": {
+			"name": "Oishi_DataFlow"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sampleInput2",
+						"type": "DatasetReference"
+					},
+					"name": "xlsxInport"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureSqlDatabase2Oishi",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {領域} as string,",
+				"          {管理ポイント名称} as string,",
+				"          {型} as string,",
+				"          {区分名称} as string,",
+				"          {区分(from)} as string,",
+				"          {区分(to)} as string,",
+				"          {運用開始日} as string,",
+				"          {運用終了日} as string,",
+				"          {論理削除フラグ} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> xlsxInport",
+				"xlsxInport alterRow(deleteIf(isNull({領域})==true()),",
+				"     deleteIf(isNull({管理ポイント名称})==true())) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'KanriPoint',",
+				"     insertable: true,",
+				"     updateable: true,",
+				"     deletable: true,",
+				"     upsertable: true,",
+				"     keys:['領域','管理ポイント名称'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     preCommands: [],",
+				"     postCommands: []) ~> sink1"
+			]
+		}
+	}
+}

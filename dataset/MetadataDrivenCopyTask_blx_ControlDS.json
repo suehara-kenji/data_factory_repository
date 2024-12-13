@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_blx_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lsTestShimamura",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_blx_20240814"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MainControlTable_blx"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
